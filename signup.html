@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>सिभिल इन्जिनियरिङ शाखा</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #60a5fa;
+            --accent: #06b6d4;
+            --dark: #030712;
+            --dark-card: rgba(17, 24, 39, 0.6);
+            --gray: #9ca3af;
+            --text-light: #f3f4f6;
+            --success: #10b981;
+            --error: #ef4444;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 2rem;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.08), transparent 50%);
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 2.5rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(6, 182, 212, 0.02);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-logo span {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            margin-left: 0.5rem;
+        }
+
+        .auth-subtitle {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: rgba(3, 7, 18, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.85rem 1rem 0.85rem 3rem;
+            color: #fff;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(3, 7, 18, 0.8);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.15);
+        }
+
+        .auth-input:focus+i {
+            color: var(--accent);
+        }
+
+        .network-badge {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .btn-auth-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), #1d4ed8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.9rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-auth-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .auth-switch a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .verification-text {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 1.25rem;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .verification-text strong {
+            color: var(--accent);
+        }
+
+        .sms-notification-wrapper {
+            position: fixed;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 420px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(6, 182, 212, 0.15);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+            z-index: 9999;
+            backdrop-filter: blur(12px);
+            transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .sms-notification-wrapper.slide-down {
+            top: 24px;
+        }
+
+        .sms-icon {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent);
+            padding: 0.6rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+
+        .sms-content {
+            flex: 1;
+        }
+
+        .sms-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.15rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sms-title span {
+            font-size: 0.7rem;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        .sms-body {
+            font-size: 0.8rem;
+            color: #d1d5db;
+            line-height: 1.4;
+        }
+
+        .sms-body strong {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: var(--mono);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-left: 0.2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <div class="sms-notification-wrapper" id="smsNotification">
+        <div class="sms-icon">
+            <i class="fas fa-comment-alt"></i>
+        </div>
+        <div class="sms-content">
+            <div class="sms-title">
+                Messages <span>अहिले</span>
+            </div>
+            <div class="sms-body" id="smsBodyText">
+                Your verification code is: <strong>000000</strong>
+            </div>
+        </div>
+    </div>
+    <div class="auth-container">
+        <div class="auth-header">
+            <div class="auth-logo">
+                साइन अप गर्नुहोस्
+            </div>
+            <p class="auth-subtitle" id="formSubtitle"></p>
+        </div>
+
+        <div class="network-badge" id="netStatus">
+            <span
+                style="width: 6px; height: 6px; background: var(--success); border-radius: 50%; display: inline-block;"></span>
+            Network Pipeline Connected
+        </div>
+
+        <form id="signupForm" onsubmit="handleRegistration(event)">
+            <div class="input-group">
+                <input type="text" class="auth-input" id="regName" placeholder="तपाईंको नाम लेख्नुहोस्" required>
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="input-group">
+                <input type="tel" class="auth-input" id="regPhone"
+                    placeholder="तपाईंको मोबाइल नम्बर (उदा: +९७७xxxxxxxxx)" required>
+                <i class="fas fa-phone-alt"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" class="auth-input" id="regPassword" placeholder="अधिकृत पासकी" minlength="8"
+                    required>
+                <i class="fas fa-key"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" class="auth-input" id="regConfirmPassword" placeholder="पासकी पुष्टि गर्नुहोस्"
+                    minlength="8" required>
+                <i class="fas fa-lock"></i>
+            </div>
+
+            <button type="submit" class="btn-auth-submit">
+                एक्सेस प्रोफाइल तैनाथ गर्नुहोस् <i class="fas fa-shield-alt"></i>
+            </button>
+        </form>
+
+        <form id="verifyForm" class="hidden" onsubmit="handleVerification(event)">
+            <p class="verification-text">
+                हामीले तपाईंको मोबाइल नम्बर <strong id="displayPhone"></strong> मा ६-अङ्कको सुरक्षा SMS प्रमाणीकरण कोड
+                पठाएका छौँ।
+            </p>
+            <div class="input-group">
+                <input type="text" class="auth-input" id="verifyCode" placeholder="SMS कोड प्रविष्ट गर्नुहोस् (६-अङ्क)"
+                    pattern="\d{6}" maxlength="6" inputmode="numeric" required
+                    style="font-family: var(--mono); letter-spacing: 0.3em; text-align: center; padding-left: 1rem;">
+                <i class="fas fa-sms" style="left: auto; right: 1.25rem;"></i>
+            </div>
+
+            <button type="submit" class="btn-auth-submit"
+                style="background: linear-gradient(135deg, var(--accent), #0891b2);">
+                कोड प्रमाणित गर्नुहोस् <i class="fas fa-check-circle"></i>
+            </button>
+        </form>
+
+        <div class="auth-switch" id="authSwitchContainer">
+            अहिलेको अनुमति प्रोफाइल? <a href="login.html">लग इन गर्नुहोस्</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        const netStatus = document.getElementById('netStatus');
+        const signupForm = document.getElementById('signupForm');
+        const verifyForm = document.getElementById('verifyForm');
+        const formSubtitle = document.getElementById('formSubtitle');
+        const displayPhone = document.getElementById('displayPhone');
+        const authSwitchContainer = document.getElementById('authSwitchContainer');
+        const smsNotification = document.getElementById('smsNotification');
+        const smsBodyText = document.getElementById('smsBodyText');
+
+        let generatedVerificationCode = null;
+
+        // Cache inputs globally for step-2 validation save
+        let globalRegistrationData = null;
+
+        window.addEventListener('offline', () => {
+            netStatus.style.color = 'var(--error)';
+            netStatus.innerHTML = '<span style="width:6px; height:6px; background:var(--error); border-radius:50%; display:inline-block; box-shadow:0 0 8px var(--error);"></span> Network Disconnected // System Locked';
+        });
+
+        window.addEventListener('online', () => {
+            netStatus.style.color = 'var(--success)';
+            netStatus.innerHTML = '<span style="width:6px; height:6px; background:var(--success); border-radius:50%; display:inline-block;"></span>तपाईं अनलाइन हुनुहुन्छ';
+        });
+
+        function handleRegistration(e) {
+            e.preventDefault();
+
+            const userPhone = document.getElementById('regPhone').value.trim();
+            const userName = document.getElementById('regName').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            // नयाँ थपिएको फोन नम्बर प्रमाणीकरण (नेपाली नम्बरको सही संरचना जाँच्न)
+            // यसले +97798xxxxxxxx, 97798xxxxxxxx वा सिधै 98xxxxxxxx / 97xxxxxxxx स्वीकार गर्दछ।
+            const phoneRegex = /^(\+?977)?(98|97|96\d)\d{7}$/;
+
+            if (!phoneRegex.test(userPhone)) {
+                Toastify({
+                    text: "✕ त्रुटि: अमान्य मोबाइल नम्बर! कृपया सही नम्बर राख्नुहोस्।",
+                    duration: 4000,
+                    style: { background: "linear-gradient(135deg, #7f1d1d, #ef4444)" }
+                }).showToast();
+                return; // कोड जेनेरेट हुनबाट रोक्छ
+            }
+
+            // FRONTEND VALIDATION: Check if passwords match instantly
+            if (password !== confirmPassword) {
+                Toastify({
+                    text: "✕ त्रुटि: पासवर्डहरू मेल खाएनन्! कृपया फेरि जाँच्नुहोस्।",
+                    duration: 4000,
+                    style: { background: "linear-gradient(135deg, #7f1d1d, #ef4444)" }
+                }).showToast();
+                return;
+            }
+
+            // Cache the fields to send to PHP later after SMS verification passes
+            globalRegistrationData = {
+                username: userName,
+                phone: userPhone,
+                password: password,
+                confirm_password: confirmPassword
+            };
+
+            // Generate dynamic code for notification
+            generatedVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+            Toastify({ text: "SMS प्रमाणीकरण कोड पठाउँदै...", duration: 1000, style: { background: "var(--primary)" } }).showToast();
+
+            setTimeout(() => {
+                displayPhone.textContent = userPhone;
+                signupForm.classList.add('hidden');
+                verifyForm.classList.remove('hidden');
+                authSwitchContainer.classList.add('hidden');
+                formSubtitle.textContent = "SMS सुरक्षा प्रमाणीकरण आवश्यक छ |";
+
+                // Slide simulated notification down
+                setTimeout(() => {
+                    smsBodyText.innerHTML = `AETHER AUTH: तपाईंको सक्रियता सुरक्षा प्रमाणहरू कुञ्जी हो <strong>${generatedVerificationCode}</strong>.`;
+                    smsNotification.classList.add('slide-down');
+                    setTimeout(() => smsNotification.classList.remove('slide-down'), 7000);
+                }, 500);
+
+            }, 1000);
+        }
+
+        function handleVerification(e) {
+            e.preventDefault();
+            const userInputCode = document.getElementById('verifyCode').value.trim();
+
+            if (userInputCode === generatedVerificationCode) {
+                smsNotification.classList.remove('slide-down');
+                Toastify({ text: "कोड प्रमाणित भयो! डेटाबेसमा सुरक्षित गर्दै...", duration: 1500, style: { background: "var(--primary)" } }).showToast();
+
+                // SEND DATA TO PHP FOR DATABASE INSERTION
+                const formData = new FormData();
+                formData.append('username', globalRegistrationData.username);
+                formData.append('phone', globalRegistrationData.phone);
+                formData.append('password', globalRegistrationData.password);
+                formData.append('confirm_password', globalRegistrationData.confirm_password);
+
+                fetch('signup.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            Toastify({ text: data.message, duration: 2000, style: { background: "var(--success)" } }).showToast();
+                            setTimeout(() => window.location.href = 'login.html', 2000);
+                        } else {
+                            Toastify({ text: "✕ " + data.message, duration: 5000, style: { background: "var(--error)" } }).showToast();
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Database Save Failure:", error);
+                        Toastify({ text: "✕ सर्भर जडान त्रुटि। डेटाबेस सुरक्षित हुन सकेन।", duration: 4000, style: { background: "var(--error)" } }).showToast();
+                    });
+
+            } else {
+                Toastify({
+                    text: "त्रुटि: प्रमाणीकरण कोड गलत छ।",
+                    duration: 4000,
+                    style: { background: "linear-gradient(135deg, #7f1d1d, #ef4444)" }
+                }).showToast();
+            }
+        }
+    </script>
+</body>
+</html>

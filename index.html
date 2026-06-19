@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>सिभिल इन्जिनियरिङ शाखा | लेटाङ नगरपालिका</title>
+    <meta name="description"
+        content="AETHER delivers cutting-edge structural engineering, geotechnical analysis, and digital twin solutions with scroll-driven 3D visualization technology.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #60a5fa;
+            --secondary: #7c3aed;
+            --accent: #06b6d4;
+            --dark: #030712;
+            --dark-card: rgba(17, 24, 39, 0.7);
+            --border-glow: rgba(37, 99, 235, 0.2);
+            --gray: #9ca3af;
+            --text-light: #f3f4f6;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* Ambient Technical Background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.12), transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(124, 58, 237, 0.12), transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.05), transparent 70%);
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(37, 99, 235, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2.5rem;
+        }
+
+        /* Navigation Header */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: transparent;
+        }
+
+        .navbar.scrolled {
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.03em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s, transform 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:not(.nav-btn):hover {
+            color: #fff;
+        }
+
+        .nav-links a:not(.nav-btn)::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 2px;
+            bottom: -6px;
+            left: 0;
+            background-color: var(--primary-light);
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+
+        .nav-links a:not(.nav-btn):hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+        }
+
+        .menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+            z-index: 1010;
+            transition: transform 0.3s;
+        }
+
+        /* Mobile Flyout Navigation Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100vh;
+            background: rgba(3, 7, 18, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu a {
+            font-size: 1.5rem;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Hero Layer */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 8rem 0 4rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.25);
+            border-radius: 50px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: var(--mono);
+            color: var(--primary-light);
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 7vw, 5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 2rem;
+            letter-spacing: -0.03em;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 30%, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Modernized Tech Buttons */
+        .btn-primary,
+        .btn-outline {
+            padding: 1rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.6);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-light);
+            transform: translateY(-3px);
+        }
+
+        /* Section Layouts */
+        .section {
+            padding: 8rem 0;
+        }
+
+        .section-header {
+            max-width: 700px;
+            margin: 0 auto 4.5rem auto;
+            text-align: center;
+        }
+
+        .section-tag {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        /* Grid Enhancements & Dashboards Widgets */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .service-card {
+            background: var(--dark-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top left, rgba(6, 182, 212, 0.1), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-glow);
+            box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.15);
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .service-icon i {
+            font-size: 1.5rem;
+            color: var(--primary-light);
+        }
+
+        .service-card h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: var(--gray);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Modern Live Data Analytics Widget */
+        .live-telemetry {
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+        }
+
+        .telemetry-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .telemetry-item .label {
+            color: #4b5563;
+            text-transform: uppercase;
+        }
+
+        .telemetry-item .value {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Technical Interactive Viewports */
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            border-radius: 2rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: radial-gradient(circle at center, #0a0f1d 0%, #03050a 100%);
+            margin: 3rem 0;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            border-radius: 2rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8);
+        }
+
+        .scrub-video {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Dashboard Statistics Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-family: var(--mono);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* High-End Enterprise Form Elements */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .contact-info-panel h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-form {
+            background: var(--dark-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 2rem;
+            padding: 3.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #9ca3af;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1.1rem 1.25rem;
+            background: rgba(3, 7, 18, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.85rem;
+            color: white;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+            background: rgba(3, 7, 18, 0.9);
+        }
+
+        /* Portfolio Components */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .project-card {
+            background: var(--dark-card);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+
+        .project-img {
+            height: 240px;
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: var(--accent);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .project-info {
+            padding: 2rem;
+        }
+
+        .project-info h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-info p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* NEW CONTENT: Premium Get App Layout Ecosystem */
+        .get-app-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            background: radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.15), transparent 60%),
+                linear-gradient(135deg, rgba(17, 24, 39, 0.4), rgba(3, 7, 12, 0.7));
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 2.5rem;
+            padding: 4.5rem;
+            margin: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .get-app-content h2 {
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.25rem;
+        }
+
+        .get-app-content p {
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+        }
+
+        .store-badge-row {
+            display: flex;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-market-badge {
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-market-badge:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -10px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-market-badge i {
+            font-size: 1.8rem;
+        }
+
+        .badge-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .badge-text .sub {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray);
+        }
+
+        .badge-text .main {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .app-mockup-display {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mockup-phone {
+            width: 270px;
+            height: 520px;
+            background: #030712;
+            border: 6px solid #1f2937;
+            border-radius: 40px;
+            position: relative;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(37, 99, 235, 0.15);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            overflow: hidden;
+        }
+
+        .mockup-phone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            height: 18px;
+            background: #1f2937;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 10;
+        }
+
+        .phone-content-simulation {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+            height: 100%;
+        }
+
+        .sim-header {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--accent);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.5rem;
+        }
+
+        .sim-widget {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 0.8rem;
+        }
+
+        .sim-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Conversional CTA */
+        .cta-section {
+            background: radial-gradient(circle at top right, rgba(124, 58, 237, 0.15), transparent 60%),
+                linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(3, 7, 12, 0.6));
+            border-radius: 2.5rem;
+            padding: 5rem;
+            text-align: center;
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            margin: 4rem 0;
+        }
+
+        .cta-section h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        /* Unified Premium Footer */
+        footer {
+            background: #02040a;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 5rem 0 3rem;
+            margin-top: 6rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr repeat(3, 1fr);
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-col h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col a {
+            display: block;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+
+        .mobile-fallback {
+            display: none;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .get-app-layout {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                padding: 3rem;
+            }
+
+            .app-mockup-display {
+                display: none;
+            }
+
+            .get-app-layout {
+                grid-template-columns: 1fr;
+                text-align: center;
+                justify-items: center;
+            }
+
+            .store-badge-row {
+                justify-content: center;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .canvas-container {
+                display: none;
+            }
+
+            .mobile-fallback {
+                display: block;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .section {
+                padding: 5rem 0;
+            }
+
+            .cta-section {
+                padding: 3rem 1.5rem;
+            }
+
+            .contact-form {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* मोबाइलमा भ्यालिडेसन म्यासेज स्पष्ट र रेस्पोन्सिभ देखाउनका लागि टोस्टको सीएसएस */
+        .toastify {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem !important;
+            padding: 12px 20px !important;
+            border-radius: 8px !important;
+            max-width: 90% !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#home">गृह</a>
+        <a href="#services">सेवाहरू</a>
+        <a href="#technology">प्रविधि</a>
+        <a href="#projects">परियोजनाहरू</a>
+        <a href="#contact">सम्पर्क</a>
+        <a href="login.html" class="nav-btn" target="_blank">लग इन</a>
+        <a href="signup.html" class="nav-btn" target="_blank">दर्ता गर्नुहोस्</a>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">सिभिल इन्जिनियरिङ शाखा<span></span></div>
+            <div class="nav-links">
+                <a href="#home">गृह</a>
+                <a href="#services">सेवाहरू</a>
+                <a href="#technology">प्रविधि</a>
+                <a href="#projects">परियोजनाहरू</a>
+                <a href="#contact">सम्पर्क</a>
+                <!-- <a href="admin.html" class="nav-btn" target="_blank">प्रशासन नियन्त्रण<i class="fas fa-chart-line" -->
+                <!-- style="margin-left: 0.4rem;"></i></a> -->
+                <a href="https://mail.google.com/mail/u/0/#inbox?compose=GTvVlcSMTtQLDjlXDLcZWnqvBfQdFzMSqrBMNNXcPHJgpVKJNszSkXMMpjVZMGWsDlrSBdZWRKDfn"
+                    class="nav-btn" target="_blank">कृपया मलाई इमेल गर्नुहोस्</a>
+                <a href="login.html" class="nav-btn" target="_blank">लग इन</a>
+                <a href="signup.html" class="nav-btn" target="_blank">दर्ता गर्नुहोस्</a>
+                <!-- <a href="signup.html" class="nav-btn" target="_blank">AI</a> -->
+            </div>
+            <div class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-microchip"></i>सिस्टम स्थिति: सञ्चालनमा v4.26
+                </div>
+                <h1>कहाँ<span class="gradient-text">डिजिटल ट्विन्स</span>संरचनात्मक वास्तविकता भेट्नुहोस्</h1>
+                <p>सिभिल इन्जिनियरिङ शाखा जटिल पूर्वाधार डेटा स्ट्रिमहरूलाई हाई-परफर्मेन्स, स्क्रोल गर्दै चलाउने दृश्य
+                    मोडेलहरूमा बदल्छ।
+                    हाम्रै संरचनात्मक र भू-प्रविधिक टेलिमेट्रीले भौतिक सम्पत्ति छेउ नाप्छ।</p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn-primary">प्रोजेक्ट सुरु गर्नुहोस्<i
+                            class="fas fa-arrow-right"></i></a>
+                    <a href="#technology" class="btn-outline">प्राविधिक विवरण</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag"></div>
+                <h2>इन्जिनियरिङ क्षमता</h2>
+                <p>उच्च-विश्वसनीयता डायग्नोस्टिक्स र एल्गोरिथमिक अप्टिमाइजेसन प्रणालीहरू</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-drafting-compass"></i></div>
+                    <h3>संरचनात्मक अनुकूलन</h3>
+                    <p>उन्नत पृथक तत्व ट्र्याकिङ, सिमित तत्व क्लस्टरहरू, र गतिशील भूकम्प विरुद्ध मरोड रूटिनहरू।</p>
+                    <div class="live-telemetry">
+                        <!-- <div class="telemetry-item"><div class="label">Compute</div><div class="value">FEA Core v2</div></div> -->
+                        <!-- <div class="telemetry-item"><div class="label">Latency</div><div class="value">14ms</div></div> -->
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-mountain"></i></div>
+                    <h3>भू-प्राविधिक मोडलिङ</h3>
+                    <p>माटोको तहको हिसाब, पोर दबावको मूल्याङ्कन म्याट्रिक्स, र रियल-टाइम बिग्रनुका नक्साहरू।</p>
+                    <div class="live-telemetry">
+                        <!-- <div class="telemetry-item"><div class="label">Sensors</div><div class="value">Active</div></div> -->
+                        <!-- <div class="telemetry-item"><div class="label">Precision</div><div class="value">±0.2mm</div></div> -->
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-cube"></i></div>
+                    <h3>हाई-फिडेलिटी जुडी</h3>
+                    <p>अनुकूलन गरिएको रेंडरिङ कन्टेनरभित्र वास्तविक समयमा संरचनात्मक स्वास्थ्य देखाउने निरन्तर स्थानिक
+                        डेटा पाइपलाइनहरू।</p>
+                    <div class="live-telemetry">
+                        <!-- <div class="telemetry-item"><div class="label">Viewport</div><div class="value">WebGL2</div></div> -->
+                        <!-- <div class="telemetry-item"><div class="label">FPS</div><div class="value">60.0</div></div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="technology" class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">स्थानिक रेन्डर इन्जिन</div>
+                <h2>स्क्रोल-ड्राइभन टेलिमेट्री भ्यूपोर्ट</h2>
+                <p>प्रगतिशील स्क्रोल अन्तरक्रियाहरू प्रयोग गरेर संरचनात्मक अवस्था कन्फिगरेसन अघि वा पछाडि बढाउनुहोस्</p>
+            </div>
+
+            <div id="threeCanvas" class="canvas-container"></div>
+
+            <div class="mobile-fallback">
+                <i class="fas fa-cubes"
+                    style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem; display: block;"></i>
+                <p style="color: var(--gray);">इंटरएक्टिभ WebGL सिस्टमहरूलाई डेस्कटप वातावरण चाहिन्छ।</p>
+            </div>
+
+            <div class="video-container" style="margin-top: 4rem;">
+                <video id="scrubVideo" class="scrub-video" muted playsinline preload="auto">
+                    <source
+                        src="https://assets.mixkit.co/videos/preview/mixkit-sci-fi-digital-interface-37879-large.mp4"
+                        type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+    </section>
+    <!-- TRUSTED BY LETANG MUNICIPALITY SECTION -->
+    <section class="container" style="margin: -2rem 0 4rem 0;">
+        <div
+            style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1.5rem; padding: 2rem; text-align: center; backdrop-filter: blur(8px); position: relative; overflow: hidden;">
+            <div
+                style="font-family: var(--mono); font-size: 0.75rem; font-weight: 600; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.5rem;">
+                आधिकारिक प्राविधिक साझेदार।
+            </div>
+            <div
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;">
+                <!-- लेटाङ नगरपालिका लोगो (नेपाल सरकारको आधिकारिक निशाना छाप) -->
+                <img src="ltg.jpg" alt="Letang Municipality Logo"
+                    style="height: 70px; width: auto; filter: drop-shadow(0 0 15px rgba(37, 99, 235, 0.3)); transform: transition 0.3s;"
+                    onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                    <h3
+                        style="font-size: 1.4rem; font-weight: 800; letter-spacing: -0.01em; background: linear-gradient(135deg, #fff, var(--text-light)); -webkit-background-clip: text; background-clip: text; color: transparent;">
+                        लेटाङ नगरपालिका द्वारा विश्वसनीय
+                    </h3>
+                    <p style="color: var(--gray); font-size: 0.85rem; font-family: 'Inter', sans-serif;">
+                        सिभिल इन्जिनियरिङ शाखा | लेटाङ नगरपालिका, कोशी प्रदेश
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <div class="container">
+            <div class="contact-layout">
+                <div class="contact-info-panel">
+                    <div class="section-tag" style="text-align: left;">प्रोजेक्टको उद्देश्य</div>
+                    <h3>इन्जिनियरिङ आर्किटेक्टसँग जडान हुनुहोस्</h3>
+                    <p style="color: var(--gray); line-height: 1.6;">हाम्रो पूर्वाधार इन्टेक च्यानलहरूले सोधपुछहरूलाई
+                        तुरुन्तै सक्रिय परियोजना क्रमहरूमा पठाउँछन्।</p>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">२४ घण्टा</div>
+                            <div class="stat-label">जवाफ</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">९९.४%</div>
+                            <div class="stat-label">अपटाइम विश्वसनीयता</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>तपाईंको पूरा नाम</label>
+                                <input type="text" id="name" required placeholder="तपाईंको पूरा नाम लेख्नुहोस्">
+                            </div>
+                            <div class="form-group">
+                                <label>तपाईंको इमेल ठेगाना</label>
+                                <input type="email" id="email" required placeholder="आफ्नो इमेल प्रविष्ट गर्नुहोस्">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>सम्पत्ति डोमेन रुचि</label>
+                            <select id="service" required>
+                                <option value="">टेलिमेट्री लेयर छान्नुहोस्...</option>
+                                <option value="Structural Engineering">संरचनात्मक इन्जिनियरिङ क्लस्टर</option>
+                                <option value="Geotechnical Analysis">भू-प्राविधिक</option>
+                                <option value="Digital Twins">उच्च-विश्वसनीय डिजिटल</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>सिस्टम विवरण / प्यारामिटरहरू</label>
+                            <textarea id="message" rows="4" required
+                                placeholder="सञ्चालन विवरणहरू घोषणा गर्नुहोस्..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary" id="submitBtn"
+                            style="width: 100%; justify-content: center; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            पेस गर्नुहोस् <i class="fas fa-paper-plane" id="submitIcon"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">पुष्ट परियोजना</div>
+                <h2>सक्रिय संरचनात्मक कार्यान्वयन</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-img"><i class="fas fa-city"></i></div>
+                    <div class="project-info">
+                        <h4>स्काइलाइन सुपरटुल</h4>
+                        <p>निरन्तर स्ट्रेस-स्ट्रेन टेलीमिट्री एरेहरूमार्फत ८५ वटा संरचनात्मक स्तरहरू व्यवस्थापन गरिन्छ।
+                        </p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img"><i class="fas fa-bridge"></i></div>
+                    <div class="project-info">
+                        <h4>ट्रांस-बे स्प्यान</h4>
+                        <p>१.२ किमीको सस्पेन्सन लिंक संरचनागत स्वास्थ्य संकेतकहरू सँग तारले जडित छ जुन गतिशील रूपमा
+                            अपडेट हुँदैछन्।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="get-app-layout">
+            <div class="get-app-content">
+                <!-- <div class="section-tag" style="text-align: left;">FIELD TELEMETRY</div> -->
+                <h2>हाम्रो एप्प डाऊनलोड गर्नुहोस्</h2>
+                <p>जटिल वास्तुकला विरूपणहरू अनुगमन गर्नुहोस्, एज फाइनाइट एलिमेन्ट गणना गर्नुहोस्, र आफ्नो रिमोट उपकरणबाट
+                    सुरक्षित रूपमा लाइभ सेन्सर म्याट्रिक्स ट्र्याक गर्नुहोस्।</p>
+
+                <div class="store-badge-row">
+                    <a href="slab.html" target="_blank" class="btn-market-badge">
+                        <i class="fab fa-apple"></i>
+                        <div class="badge-text">
+                            <span class="sub">डाउनलोड गर्नुहोस्</span>
+                            <span class="main">App Store</span>
+                        </div>
+                    </a>
+
+                    <a href="slab.html" target="_blank" class="btn-market-badge">
+                        <i class="fab fa-google-play"></i>
+                        <div class="badge-text">
+                            <span class="sub">पाउनुहोस्</span>
+                            <span class="main">Google Play</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="app-mockup-display">
+                <div class="mockup-phone">
+                    <div class="phone-content-simulation">
+                        <div class="sim-header">सिभिल इन्जिनियरिङ शाखा
+                            संस्करण ४.२६</div>
+                        <div class="sim-widget">
+                            <div class="sim-bar" style="width: 40%; background: var(--accent);"></div>
+                            <div class="sim-bar" style="width: 85%;"></div>
+                            <div class="sim-bar" style="width: 60%;"></div>
+                        </div>
+                        <div class="sim-widget" style="border-color: rgba(37,99,235,0.3);">
+                            <div
+                                style="font-family: var(--mono); font-size: 0.55rem; color: var(--primary-light); margin-bottom: 0.4rem;">
+                                LIVE STRAIN CORE</div>
+                            <div
+                                style="height: 40px; background: rgba(37,99,235,0.1); border-radius: 6px; display:flex; align-items:center; justify-content:center; font-family: var(--mono); font-size: 0.7rem; color: #fff;">
+                                0.0247 ε</div>
+                        </div>
+                        <div class="sim-widget">
+                            <div class="sim-bar" style="width: 70%;"></div>
+                            <div class="sim-bar" style="width: 30%; background: var(--secondary);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="container">
+        <div class="cta-section">
+            <h3>तपाईंको संरचनात्मक रूपान्तरण सुरु गर्नुहोस्</h3>
+            <p
+                style="color: var(--gray); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                आजदेखि पूर्वाधार सम्पत्तिहरूमा टेलिमेट्री तर्क एकीकृत गर्नुहोस्</p>
+            <a href="#contact" class="btn-primary">अनुसूची नोड अडिट<i class="fas fa-calendar-alt"></i></a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 style="color: #fff;">सिभिल इन्जिनियरिङ शाखा
+                    </h4>
+                    <p style="color: var(--gray); font-size: 0.85rem; line-height: 1.5; margin-top: 1rem;">
+                        लेटाङ नगरपालिका, सिभिल इन्जिनियरिङ शाखाद्वारा विकसित यो वेब-आधारित स्ल्याब डिजाइन तथा मापन
+                        प्रणाली निर्माण सम्बन्धी प्राविधिक कार्यलाई सहज, छिटो र विश्वसनीय बनाउन तयार गरिएको हो।<br> यस
+                        प्रणालीमार्फत विभिन्न प्रकारका स्ल्याबहरूको आवश्यक मापदण्ड, आयाम तथा प्राविधिक विवरण प्रविष्ट
+                        गरी स्वचालित रूपमा गणना, विश्लेषण तथा डिजाइन सम्बन्धी नतिजा प्राप्त गर्न सकिन्छ।
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>प्रणाली इकोसिस्टम</h4>
+                    <a href="#services">संरचनात्मक डिजाइन</a>
+                    <a href="#services">जियोटेक्निकल एनालिटिक्स</a>
+                    <a href="#technology">डिजिटल जोडी</a>
+                </div>
+                <div class="footer-col">
+                    <h4>उद्यम</h4>
+                    <a href="#">हाम्रो बारेमा</a>
+                    <a href="#">क्यारियर</a>
+                </div>
+                <div class="footer-col">
+                    <h4>ठेगाना</h4>
+                    <a href="#">लेटाङ नगरपालिका</a>
+                    <a href="#">सिभिल इन्जिनियरिङ शाखा</a>
+                    <a href="#">मोरङ, नेपाल</a>
+                </div>
+                <!-- <div class="footer-col">
+                    <h4>डाटा फिडहरू</h4>
+                    <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                    <a href="#"><i class="fab fa-github"></i> GitHub</a>
+                </div> -->
+            </div>
+            <div class="copyright">
+                <p>&copy; २०२६ सिभिल इन्जिनियरिङ शाखा | लेटाङ नगरपालिका</p>
+            </div>
+        </div>
+
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+        }
+    }
+</script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Global Navbar Transition Hooks
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 40) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        });
+
+        // Fully Functional Mobile Nav Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (menuBtn && mobileMenu) {
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+                menuBtn.firstElementChild.classList.toggle('fa-bars');
+                menuBtn.firstElementChild.classList.toggle('fa-times');
+            });
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    menuBtn.firstElementChild.classList.add('fa-bars');
+                    menuBtn.firstElementChild.classList.remove('fa-times');
+                });
+            });
+        }
+
+        const isMobile = window.innerWidth < 768 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+        // Technical 3D Spatial Environment Setup
+        if (!isMobile) {
+            const container = document.getElementById('threeCanvas');
+            if (container) {
+                const scene = new THREE.Scene();
+                scene.background = new THREE.Color(0x03050a);
+
+                const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+                camera.position.set(0, 0, 4.5);
+
+                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                container.appendChild(renderer.domElement);
+
+                const ambient = new THREE.AmbientLight(0xffffff, 0.15);
+                scene.add(ambient);
+
+                const directionalLight = new THREE.DirectionalLight(0x06b6d4, 1.5);
+                directionalLight.position.set(5, 5, 5);
+                scene.add(directionalLight);
+
+                const secondaryLight = new THREE.PointLight(0x7c3aed, 2, 10);
+                secondaryLight.position.set(-3, -2, 2);
+                scene.add(secondaryLight);
+
+                // Complex Geometrical Engineering Grid Topology Simulation
+                const geometry = new THREE.TorusKnotGeometry(0.8, 0.22, 180, 16, 2, 3);
+                const material = new THREE.MeshStandardMaterial({
+                    color: 0x2563eb,
+                    metalness: 0.9,
+                    roughness: 0.1,
+                    wireframe: true
+                });
+                const model = new THREE.Mesh(geometry, material);
+                scene.add(model);
+
+                // Reactive Scroll Execution Timeline
+                gsap.to(model.rotation, {
+                    x: Math.PI * 2,
+                    y: Math.PI * 4,
+                    scrollTrigger: {
+                        trigger: "#technology",
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1
+                    }
+                });
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    model.rotation.z += 0.002;
+                    renderer.render(scene, camera);
+                }
+                animate();
+
+                window.addEventListener('resize', () => {
+                    camera.aspect = container.clientWidth / container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                });
+            }
+        }
+
+        // Frame Index Scrub Pipeline Acceleration
+        const video = document.getElementById('scrubVideo');
+        if (video) {
+            const initVideoScrub = () => {
+                const duration = video.duration;
+                ScrollTrigger.create({
+                    trigger: ".video-container",
+                    start: "top bottom-=100",
+                    end: "bottom top+=100",
+                    scrub: 0.5,
+                    onUpdate: (self) => {
+                        const targetTime = self.progress * duration;
+                        if (video.readyState >= 2) {
+                            video.currentTime = targetTime;
+                        }
+                    }
+                });
+            };
+
+            if (video.readyState >= 1) {
+                initVideoScrub();
+            } else {
+                video.addEventListener('loadedmetadata', initVideoScrub);
+            }
+        }
+
+        // CORS API Pipeline Dispatch
+        const form = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                service: document.getElementById('service').value,
+                message: document.getElementById('message').value
+            };
+
+            submitBtn.innerHTML = '<span class="spinner"></span> Encrypting Transport...';
+            submitBtn.classList.add('btn-loading');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    Toastify({
+                        text: "✓ प्याकेट प्रसारण सफल भयो। नोड रेकर्डहरू उत्पन्न भए।",
+                        duration: 5000,
+                        style: { background: "linear-gradient(135deg, #06b6d4, #2563eb)" }
+                    }).showToast();
+                    form.reset();
+                } else {
+                    throw new Error("लक्ष्य क्लस्टरले ह्यान्डशेक पेलोड अस्वीकृत गर्यो।");
+                }
+            } catch (error) {
+                Toastify({
+                    text: "✕ Pipeline Error: " + error.message,
+                    duration: 5000,
+                    style: { background: "linear-gradient(135deg, #ef4444, #dc2626)" }
+                }).showToast();
+            } finally {
+                submitBtn.innerHTML = 'Dispatch Signal <i class="fas fa-paper-plane"></i>';
+                submitBtn.classList.remove('btn-loading');
+            }
+        });
+        // ==========================================
+        // OFF-GRID NETWORK PROTECTION PROTOCOL
+        // ==========================================
+
+        // 1. Prevent action button reloads/fetches if pipeline is physically split
+        window.addEventListener('offline', () => {
+            pushLog("CRITICAL: Network matrix link fractured. Localized state frozen.");
+
+            // Update the UI connection status badge seamlessly
+            const activeIndicators = document.querySelectorAll('[style*="color: var(--success)"]');
+            activeIndicators.forEach(el => {
+                el.style.color = 'var(--error)';
+                el.innerHTML = '<span style="width: 6px; height: 6px; background: var(--error); border-radius: 50%; display: inline-block; box-shadow: 0 0 8px var(--error);"></span> Network Disconnected // Buffer Locked';
+            });
+
+            Toastify({
+                text: "⚠️ कोर लिङ्क भाँचियो! स्थानीयकृत मेमोरी बफरमा सञ्चालन भइरहेको छ। पृष्ठ पुन: लोड निलम्बित गरियो।",
+                duration: 7000,
+                close: true,
+                style: { background: "linear-gradient(135deg, #7f1d1d, #dc2626)" }
+            }).showToast();
+        });
+
+        window.addEventListener('online', () => {
+            pushLog("नेटवर्क पूर्वाधार पुनर्स्थापित गरियो। डेटा सिङ्क पुन: स्थापना गर्दै।");
+
+            // Revert the status badge safely back to active
+            const activeIndicators = document.querySelectorAll('[style*="color: var(--error)"]');
+            activeIndicators.forEach(el => {
+                el.style.color = 'var(--success)';
+                el.innerHTML = '<span style="width: 6px; height: 6px; background: var(--success); border-radius: 50%; display: inline-block;"></span> Stream Connection Active';
+            });
+
+            Toastify({
+                text: "⚡ नेटवर्क लिङ्क पुनर्स्थापित गरियो। लाइभ टेलिमेट्री पाइपलाइनहरू पुन: सुरु गर्दै।",
+                duration: 4000,
+                close: true,
+                style: { background: "linear-gradient(135deg, #06b6d4, #10b981)" }
+            }).showToast();
+
+            // Automatically fetch fresh telemetry now that we are online
+            fetchTelemetryFeed();
+        });
+
+        // 2. Intercept manual refresh attempts when offline to prevent the browser from wiping the view
+        const originalFetchTelemetry = fetchTelemetryFeed;
+        fetchTelemetryFeed = async function (...args) {
+            if (!navigator.onLine) {
+                pushLog("सिङ्क रद्द गरियो: हार्डवेयर लिङ्क अफलाइन छ।");
+                Toastify({
+                    text: "✕ कार्य अस्वीकृत: प्रत्यक्ष गेटवे लिङ्क बिना API पोल गर्न सकिँदैन।",
+                    duration: 4000,
+                    close: true,
+                    style: { background: "rgba(239, 68, 68, 0.2)", border: "1px solid var(--error)", color: "#fff" }
+                }).showToast();
+
+                // Keep current state visible, do not fall back to standard loading screen
+                if (localDataCache.length > 0) {
+                    showState('table');
+                } else {
+                    showState('empty');
+                }
+                return; // Break execution loop early
+            }
+            return originalFetchTelemetry.apply(this, args);
+        };
+        // २. EmailJS लाई आफ्नो Public Key सँग एक्टिभेट गर्ने
+        // (यसलाई सुचारु गर्न emailjs.com मा साइनअप गरी आफ्नो Public Key यहाँ राख्नुहोस्)
+        emailjs.init("eVI0Rm71ZkCsmBU9C");
+
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const submitIcon = document.getElementById('submitIcon');
+
+            // फारम भित्रका डाटा संकलन गर्ने
+            const userName = document.getElementById('name').value.trim();
+            const userEmail = document.getElementById('email').value.trim();
+            const selectedService = document.getElementById('service').value;
+            const userMessage = document.getElementById('message').value.trim();
+
+            // इमेलमा डेटा पठाउनका लागि अबजेक्ट तयार पार्ने
+            const templateParams = {
+                from_name: userName,
+                from_email: userEmail,
+                service_interest: selectedService,
+                message_details: userMessage,
+                to_email: 'admin@example.com' // यहाँ एड्मिनको वास्तविक इमेल राख्न सक्नुहुन्छ
+            };
+
+            // बटन लोड भइरहेको एनिमेसन देखाउने (प्रयोगकर्तालाई पर्खन भन्नका लागि)
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `पठाउँदै... <i class="fas fa-spinner fa-spin"></i>`;
+
+            // ३. एड्मिनको इमेलमा डाटा पठाउने मुख्य फङ्सन
+            emailjs.send('service_x64tszs', 'template_q1p49jn', templateParams)
+                .then(function (response) {
+                    // सफलतापूर्वक इमेल गएपछि मोबाइल फ्रेन्डली हरियो टोस्ट म्यासेज देखाउने
+                    Toastify({
+                        text: "✓ सफलता: फारम बुझाइयो र एड्मिनलाई इमेल पठाइयो!",
+                        duration: 4000,
+                        style: { background: "linear-gradient(135deg, #059669, #10b981)" }
+                    }).showToast();
+
+                    // फारम रिसेट गर्ने
+                    document.getElementById('contactForm').reset();
+                }, function (error) {
+                    console.error("Email Error:", error);
+                    // त्रुटि आउँदा मोबाइल फ्रेन्डली रातो टोस्ट म्यासेज देखाउने
+                    Toastify({
+                        text: "✕ त्रुटि: इमेल पठाउन सकिएन। कृपया फेरि प्रयास गर्नुहोस्।",
+                        duration: 4000,
+                        style: { background: "linear-gradient(135deg, #7f1d1d, #ef4444)" }
+                    }).showToast();
+                })
+                .finally(function () {
+                    // बटनलाई पुनः पहिलेकै अवस्थामा फर्काउने
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `पेस गर्नुहोस् <i class="fas fa-paper-plane"></i>`;
+                });
+        });
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                service: document.getElementById('service').value,
+                message: document.getElementById('message').value
+            };
+
+            // यहाँ आफ्नो PHP फाइलको सहि URL राख्नुहोस्
+            fetch('http://localhost/api/contact.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "Success") {
+                        // फारम बक्स भएको ठाउँमा सिधै नेपाली जवाफ प्रिन्ट गरिदिने
+                        const formContainer = document.querySelector('.contact-form');
+                        formContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #f3f4f6;">
+                    <i class="fas fa-check-circle" style="font-size: 3.5rem; color: #10b981; margin-bottom: 1rem;"></i>
+                    <h2 style="margin-bottom: 1rem; color: #ffffff;">${data.reply.title}</h2>
+                    <p style="font-size: 0.9rem; color: #9ca3af; line-height: 1.6; text-align: left; margin-bottom: 1.5rem;">
+                        ${data.reply.salutation}<br>
+                        ${data.reply.body}
+                    </p>
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin-bottom: 1.5rem;">
+                    <div style="text-align: left; font-size: 0.85rem; color: #d1d5db; line-height: 1.5;">
+                        <p>${data.reply.closing}</p><br>
+                        <p><strong>${data.reply.sign_off}</strong></p>
+                        <p style="color: #06b6d4; font-weight: 600; font-size: 0.95rem;">${data.reply.author}</p>
+                        <p style="font-size: 0.8rem; color: #9ca3af;">${data.reply.department}</p>
+                        <p style="font-size: 0.75rem; color: #10b981;">${data.reply.footer}</p>
+                    </div>
+                </div>
+            `;
+                    } else {
+                        alert("त्रुटि: " + data.message);
+                    }
+                })
+                .catch(error => console.error("PHP API मा जडान गर्दा त्रुटि भयो।:", error));
+        });
+    </script>
+</body>
+
+</html>

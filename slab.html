@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>दुई-तर्फी आरसी स्ल्याब डिजाइन क्याल्कुलेटर।</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-icon">🏗️</div>
+        <div class="header-text">
+            <!-- <h1>Two-Way RC Slab Design Calculator</h1> -->
+            <h1>दुई-तर्फी आरसी स्ल्याब डिजाइन क्याल्कुलेटर</h1>
+            <!-- <p>IS 456 : 2000 — Limit State Method &nbsp;|&nbsp; Moment Coefficient Method</p> -->
+            <p>IS ४५६ : २००० — सीमा अवस्था विधि &nbsp;|&nbsp; क्षण गुणांक विधि</p>
+        </div>
+        <!-- <div class="header-badge">IS 456 Table 26</div> -->
+    </header>
+
+    <div class="container">
+
+        <!-- ════ SIDEBAR ════ -->
+        <div class="sidebar">
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="num">1</div>
+                    <h2>Slab Geometry</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="field">
+                        <label>Length (Ly) <span class="unit-tag">m</span></label>
+                        <input type="number" id="ly" value="4.7256" step="0.001" min="0.1">
+                    </div>
+                    <div class="field">
+                        <label>Breadth (Lx) <span class="unit-tag">m</span></label>
+                        <input type="number" id="lx" value="3.6585" step="0.001" min="0.1">
+                    </div>
+                    <div class="field">
+                        <label>Slab Thickness <span class="unit-tag">mm</span></label>
+                        <input type="number" id="thickness" value="125" step="1" min="50">
+                    </div>
+                    <div class="field">
+                        <label>Clear Cover <span class="unit-tag">mm</span></label>
+                        <input type="number" id="cover" value="20" step="1" min="10">
+                    </div>
+                    <div class="field">
+                        <label>Panel Type</label>
+                        <select id="panelType">
+                            <option value="case1">Case 1 — Interior panel</option>
+                            <option value="case2">Case 2 — One short edge discontinuous</option>
+                            <option value="case3">Case 3 — One long edge discontinuous</option>
+                            <option value="case4" selected>Case 4 — Two adj. edges discontinuous</option>
+                            <option value="case5">Case 5 — Two short edges discontinuous</option>
+                            <option value="case6">Case 6 — Two long edges discontinuous</option>
+                            <option value="case7">Case 7 — Three edges discontinuous (one long cont.)</option>
+                            <option value="case8">Case 8 — Three edges discontinuous (one short cont.)</option>
+                            <option value="case9">Case 9 — Four edges discontinuous</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="num">2</div>
+                    <h2>Material & Loads</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Concrete Grade</label>
+                            <select id="fck">
+                                <option value="20" selected>M20</option>
+                                <option value="25">M25</option>
+                                <option value="30">M30</option>
+                                <option value="35">M35</option>
+                                <option value="40">M40</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Steel Grade</label>
+                            <select id="fy">
+                                <option value="250">Fe250</option>
+                                <option value="415">Fe415</option>
+                                <option value="500" selected>Fe500</option>
+                                <option value="550">Fe550</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Live Load <span class="unit-tag">kN/m²</span></label>
+                            <input type="number" id="ll" value="5" step="0.5" min="0">
+                        </div>
+                        <div class="field">
+                            <label>Floor Finish <span class="unit-tag">kN/m²</span></label>
+                            <input type="number" id="ff" value="1.5" step="0.5" min="0">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Concrete Density <span class="unit-tag">kN/m³</span></label>
+                        <input type="number" id="density" value="25" step="0.5" min="20">
+                    </div>
+                    <div class="field">
+                        <label>Main Bar Dia (ϕ) <span class="unit-tag">mm</span></label>
+                        <select id="barDia">
+                            <option value="8" selected>8 mm</option>
+                            <option value="10">10 mm</option>
+                            <option value="12">12 mm</option>
+                            <option value="16">16 mm</option>
+                            <option value="20">20 mm</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="calc-btn" onclick="calculate()">Calculate</button>
+        </div>
+
+        <!-- ════ RESULTS ════ -->
+        <div class="results-area" id="resultsArea">
+            <div class="result-section">
+                <div class="placeholder">
+                    <div class="ph-icon">📐</div>
+                    <p>Fill in slab data and click <strong>Calculate All Sections</strong> to see the complete design
+                        output.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
